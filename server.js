@@ -1,25 +1,23 @@
 "use strict";
 
+const express = require("express");
+const app = express();
+
+const fs = require("fs");
+const path = require("path");
+const sessions = fs.readFileSync(path.join(__dirname, "sessions.json"));
+
 require("dotenv").config();
-const http = require("http");
-const sessions = require("./sessions.json");
 const port = process.env.PORT || 5000;
 
-const server = http.createServer((req, res) => {
-  if (req.url === "/") {
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.write("<h1>Hello Salesforce Developers</h1>");
-    res.write("<p>This is our first Node App</p>");
-    res.end();
-  } else if (req.url === "/api-sessions") {
-    res.write("<h1>sessions</h1>");
-  } else {
-    res.write("<h1>page not found</h1>");
-  }
+app.get("/", (req, res) => {
+  res.send("Hello salesforce World");
 });
 
-server.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.get("/api/sessions", (req, res) => {
+  res.json(JSON.parse(sessions));
 });
 
-// https://www.youtube.com/watch?v=vqPr64AZdTQ
+app.listen(port, () => {
+  console.log(`Express server running on http://localhost:${port}`);
+});
